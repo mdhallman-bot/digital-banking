@@ -89,6 +89,39 @@
   /* ---------- Scenario prose ---------- */
   .scenario-box { background: var(--paper); padding: 14px 18px; border-left: 4px solid var(--gold); margin: 10px 0; font-size: 1.02rem; }
 
+  /* ---------- Reading passages ---------- */
+  .reading-box { background: #fff; border: 1px solid #e2e4ee; border-left: 4px solid var(--navy); padding: 14px 18px; margin: 14px 0; }
+  .reading-box .reading-title { font-family: Arial, sans-serif; font-weight: bold; color: var(--navy); font-size: 0.95rem; margin-bottom: 6px; }
+
+  /* ---------- Activity blocks (self-checking, no backend) ---------- */
+  .activity-block { background: var(--panel); border-radius: 6px; padding: 14px 18px; margin: 14px 0; }
+  .activity-title { font-family: Arial, sans-serif; font-weight: bold; color: var(--navy); font-size: 1rem; margin-bottom: 6px; }
+  .activity-item { background: #fff; border-radius: 5px; padding: 12px 14px; margin: 10px 0; border: 1px solid #dcdfec; }
+  .activity-item .item-prompt { font-family: Arial, sans-serif; font-size: 0.9rem; font-weight: bold; margin-bottom: 6px; }
+  .activity-item textarea { min-height: 50px; font-size: 13.5px; margin-top: 6px; }
+  .activity-item .item-justify-label { font-family: Arial, sans-serif; font-size: 0.8rem; color: #666; margin-top: 6px; }
+  .compare-table { width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 0.85rem; margin: 10px 0; }
+  .compare-table th, .compare-table td { border: 1px solid #ccc; padding: 6px 8px; text-align: left; }
+  .compare-table th { background: var(--navy); color: #fff; }
+  .compare-table tr:nth-child(even) td { background: #f4f5fb; }
+
+  .flag-checkbox-row { font-family: Arial, sans-serif; font-size: 0.88rem; margin: 4px 0; display: flex; align-items: flex-start; gap: 6px; }
+  .flag-checkbox-row label { cursor: pointer; }
+  .rs-btn-row { display: flex; gap: 8px; margin-top: 6px; }
+  .rs-btn-row button { margin: 0; }
+  .rs-btn-row button.picked-real { background: #4a5fa8; color: #fff; }
+  .rs-btn-row button.picked-scam { background: var(--red-strong); color: #fff; }
+
+  /* ---------- Closing vocab activity ---------- */
+  .vocab-activity { background: var(--panel); border-radius: 6px; padding: 16px 18px; margin: 14px 0; }
+  .bucket-grid { display: flex; gap: 14px; flex-wrap: wrap; margin: 10px 0; }
+  .bucket-col { flex: 1; min-width: 220px; background: #fff; border-radius: 6px; padding: 10px 12px; border: 1px solid #dcdfec; }
+  .bucket-col h4 { font-family: Arial, sans-serif; font-size: 0.9rem; margin: 0 0 8px 0; color: var(--navy); }
+  .sort-row { font-family: Arial, sans-serif; font-size: 0.87rem; margin: 6px 0; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+  .sort-row select { font-family: Arial, sans-serif; font-size: 0.82rem; padding: 3px; }
+  .blank-select { font-family: Arial, sans-serif; font-size: 0.88rem; padding: 3px 4px; border: 1px solid #999; border-radius: 3px; background: var(--gold-light); }
+  .fill-blank-passage { font-size: 1rem; line-height: 2; }
+
   /* ---------- Non-AI focus questions (self-checking, no backend) ---------- */
   .focus-q { background: var(--panel); border-radius: 6px; padding: 12px 16px; margin: 10px 0; }
   .focus-q .prompt { font-family: Arial, sans-serif; font-size: 0.92rem; font-weight: bold; margin-bottom: 8px; }
@@ -180,6 +213,46 @@
   <div class="slide-gate" id="gate-gate1"></div>
 
   <div class="decision-content" id="content-gate1">
+    <div class="reading-box">
+      <div class="reading-title">Reading: Pending vs. Posted</div>
+      <p>When money moves electronically, it doesn't move instantly. A direct deposit your employer sends on
+      Thursday might not actually show up &mdash; post &mdash; in your account until Friday or even Monday,
+      depending on your bank's processing schedule. The money is "pending" until it fully posts.</p>
+      <p>Autopay works in a mirror-image way. When you set up a bill to pay on the 15th, most billers actually
+      withdraw the money 1&ndash;3 days <em>before</em> the due date, not exactly on it &mdash; so the
+      withdrawal might come out on the 12th or 13th.</p>
+      <p>This gap between when you expect money to move and when it actually moves is called a
+      <strong>timing mismatch</strong>. It's one of the most common reasons someone gets hit with an overdraft
+      fee even though they did everything "right" &mdash; they set up direct deposit, they set up autopay, but
+      the dates didn't quite line up the way they assumed. Convenience tools handle the mechanics of moving
+      money. They don't handle the timing for you.</p>
+    </div>
+
+    <div class="activity-block">
+      <div class="activity-title">Activity: Find the Timing Mismatch</div>
+      <p style="font-family:Arial, sans-serif; font-size:0.88rem;">
+        Riley gets paid every other Friday. This month her paydays land on the <strong>3rd</strong> and the
+        <strong>17th</strong>. Her rent autopays on the <strong>1st</strong>, her phone bill on the
+        <strong>15th</strong>, and her streaming subscription on the <strong>20th</strong>.
+      </p>
+      <div class="activity-item" id="act-timing"></div>
+    </div>
+
+    <div class="activity-block">
+      <div class="activity-title">Activity: Compare the Accounts</div>
+      <p style="font-family:Arial, sans-serif; font-size:0.88rem;">
+        Riley's habits: her balance dips near $15 about twice a month, she uses an out-of-network ATM about
+        once a month, and she now qualifies for direct deposit through her new job. Which account fits her best?
+      </p>
+      <table class="compare-table">
+        <tr><th></th><th>Sunrise Basic</th><th>Sunrise Plus</th><th>Sunrise Free Checking</th></tr>
+        <tr><td>Monthly fee</td><td>$0</td><td>$12 (waived with direct deposit)</td><td>$0, always</td></tr>
+        <tr><td>Overdraft fee</td><td>$35</td><td>$0 &mdash; purchase just declines</td><td>$35</td></tr>
+        <tr><td>Out-of-network ATM fee</td><td>$2.50</td><td>$0 (up to 3/month)</td><td>No reimbursement</td></tr>
+      </table>
+      <div class="activity-item" id="act-accounts"></div>
+    </div>
+
     <h3>Riley's Decision: Setting Up Her Account</h3>
     <div class="scenario-box">
       Riley just started her first job at Sunrise Coffee. Her manager hands her a form: direct deposit or
@@ -215,6 +288,36 @@
   <div class="slide-gate" id="gate-gate2"></div>
 
   <div class="decision-content" id="content-gate2">
+    <div class="reading-box">
+      <div class="reading-title">Reading: Right Tool, Right Person</div>
+      <p>Not every payment app is built for the same situation. The real question isn't "which app is best"
+      &mdash; it's "who am I paying, and what happens if this goes wrong?"</p>
+      <p>If you're paying someone you already trust &mdash; a roommate, a family member &mdash; for something
+      routine like splitting rent, speed matters more than reversibility. Zelle or a P2P app works fine.</p>
+      <p>If you're paying a stranger for something you haven't received yet &mdash; concert tickets, a used
+      phone, sneakers from an online listing &mdash; reversibility matters more than speed. A method with
+      buyer protection, like a credit card or a wallet with purchase protection, is safer, because if the deal
+      falls through, you have a way to get your money back.</p>
+      <p>If you're paying a business, a digital wallet or card is built for that relationship, with fraud
+      protections P2P apps don't have. Match the tool to the relationship, not just the moment.</p>
+    </div>
+
+    <div class="activity-block">
+      <div class="activity-title">Activity: Which Tool, Which Reason?</div>
+      <p style="font-family:Arial, sans-serif; font-size:0.88rem;">For each situation, pick the best tool and explain why in one sentence.</p>
+      <div id="act-tools"></div>
+    </div>
+
+    <div class="activity-block">
+      <div class="activity-title">Activity: You Be the Judge</div>
+      <div class="scenario-box" style="margin-top:0;">
+        Riley's friend Maya used Zelle to pay her landlord $900 for rent. She meant to send it to "Sunrise
+        Realty Group," but her contact list auto-filled a similar name, and the money went to a stranger
+        instead. Maya calls her bank, upset: "This is the bank's fault &mdash; they should have caught this!"
+      </div>
+      <div class="activity-item" id="act-judge"></div>
+    </div>
+
     <h3>Riley's Decision: Selling Her Sneakers</h3>
     <div class="scenario-box">
       Riley posts her old sneakers for sale online, asking $60. A buyer messages: "I'll send it right now on
@@ -247,6 +350,39 @@
   <div class="slide-gate" id="gate-gate3"></div>
 
   <div class="decision-content" id="content-gate3">
+    <div class="reading-box">
+      <div class="reading-title">Reading: Three Shapes, One Pattern</div>
+      <p>Scams come in different shapes, but most share one pattern: urgency, plus a reason not to just hang
+      up and check for yourself.</p>
+      <p><strong>Phishing</strong> texts or emails claim your account is about to be locked or charged, and
+      pressure you to click a link right now to "verify" your identity.</p>
+      <p><strong>Bank-impersonation scams</strong> are more advanced: a scammer poses as your bank's fraud
+      department, tells you there's suspicious activity, and &mdash; this is the twist &mdash; walks you
+      through sending money to yourself to "secure" your account. In reality, they're guiding you to send it
+      to them.</p>
+      <p><strong>Marketplace scams</strong> target buying and selling: a "buyer" sends a fake payment
+      screenshot and pressures you to ship an item before you can verify the money actually arrived.</p>
+      <p>Different setups, same core move: create urgency, then give a reason not to slow down and check. The
+      fix is always the same too &mdash; slow down, and verify using a method you already trust, not one the
+      message gives you.</p>
+    </div>
+
+    <div class="activity-block">
+      <div class="activity-title">Activity: Spot the Scam</div>
+      <p style="font-family:Arial, sans-serif; font-size:0.88rem;">Check every red flag you spot in each message, then say what you'd actually do.</p>
+      <div id="act-spot"></div>
+    </div>
+
+    <div class="activity-block">
+      <div class="activity-title">Activity: Real or Scam?</div>
+      <p style="font-family:Arial, sans-serif; font-size:0.88rem;">These 6 messages are a mix of real bank alerts and scams. Sort each one.</p>
+      <div id="act-realscam"></div>
+      <div class="activity-item" style="margin-top:12px;">
+        <div class="item-prompt">Pick one message you marked "Scam" above and explain the one detail that gave it away.</div>
+        <textarea id="act-realscam-justify" placeholder="Type your answer here..."></textarea>
+      </div>
+    </div>
+
     <h3>Riley's Decision: A Text From "The Bank"</h3>
     <div class="scenario-box">
       That night, Riley gets a text: <em>"Sunrise Bank Alert: Your account will be locked in 24 hours due to
@@ -275,6 +411,23 @@
 <div class="feature-figure">
   <img src="slides/slide-24.jpg" alt="Vocabulary recap slide">
   <div class="caption">All 8 words from today, in one place.</div>
+</div>
+
+<!-- ============ CLOSING VOCAB ACTIVITY ============ -->
+<h2>Vocabulary Check</h2>
+<div class="vocab-activity">
+  <div class="activity-title">Part 1: Sort the Words</div>
+  <p style="font-family:Arial, sans-serif; font-size:0.88rem;">Where does each word belong? Pick a category for all 8.</p>
+  <div id="act-sort"></div>
+  <div class="save-indicator" id="sort-result"></div>
+</div>
+
+<div class="vocab-activity">
+  <div class="activity-title">Part 2: Riley's Day, Recapped</div>
+  <p style="font-family:Arial, sans-serif; font-size:0.88rem;">Fill in each blank using the dropdown.</p>
+  <div class="fill-blank-passage" id="act-fillblank"></div>
+  <button onclick="checkFillBlank()">Check my answers</button>
+  <div class="save-indicator" id="fillblank-result"></div>
 </div>
 
 <!-- ============ CLOSING WRITE ============ -->
@@ -591,6 +744,296 @@ function countFocusAnswers() {
 document.addEventListener('DOMContentLoaded', renderFocusQuestions);
 
 // ============================================================
+// NEW SECTION ACTIVITIES (self-checking, no backend call)
+// All answers are saved into state via collectState()/activityAnswers.
+// ============================================================
+let activityAnswers = {}; // generic bucket for every new activity's picks + justifications
+
+function saveActivityAnswer(key, value) {
+  activityAnswers[key] = value;
+  scheduleAutoSave();
+}
+
+// ---------- Generic single-select MCQ item with optional justification ----------
+function renderMCQItem(containerId, key, config) {
+  const container = document.getElementById(containerId);
+  const optsHtml = config.options.map((opt, i) =>
+    '<div class="opt-row"><input type="radio" name="' + key + '" id="' + key + '-' + i + '" value="' + i + '">' +
+    '<label for="' + key + '-' + i + '">' + opt + '</label></div>'
+  ).join('');
+  const justifyHtml = config.justifyPrompt
+    ? '<div class="item-justify-label">' + config.justifyPrompt + '</div><textarea id="' + key + '-justify" placeholder="Type your reasoning..."></textarea>'
+    : '';
+  container.innerHTML =
+    '<div class="item-prompt">' + config.prompt + '</div>' +
+    optsHtml + justifyHtml +
+    '<button onclick="checkMCQItem(\'' + key + '\')">Check</button>' +
+    '<div class="focus-result" id="' + key + '-result"></div>';
+
+  if (config.justifyPrompt) {
+    document.getElementById(key + '-justify').addEventListener('input', () => {
+      saveActivityAnswer(key + '_justify', document.getElementById(key + '-justify').value);
+    });
+  }
+}
+
+const MCQ_CONFIGS = {}; // populated below as each activity is registered
+
+function checkMCQItem(key) {
+  const config = MCQ_CONFIGS[key];
+  const selected = document.querySelector('input[name="' + key + '"]:checked');
+  if (!selected) { alert('Choose an answer first.'); return; }
+  const val = parseInt(selected.value, 10);
+  const correct = val === config.correct;
+  saveActivityAnswer(key, { selected: val, correct: correct });
+
+  const result = document.getElementById(key + '-result');
+  result.className = 'focus-result ' + (correct ? 'correct' : 'incorrect');
+  result.textContent = (correct ? '✓ ' : '') + (correct ? config.correctMsg : config.incorrectMsg);
+}
+
+// ---------- Section 1 activities ----------
+MCQ_CONFIGS['act-timing'] = {
+  prompt: "Which bill is at the highest risk of a timing mismatch?",
+  options: ["Rent (autopays the 1st)", "Phone bill (autopays the 15th)", "Streaming (autopays the 20th)"],
+  correct: 0,
+  correctMsg: "Right — rent autopays on the 1st, but Riley's paycheck doesn't post until the 3rd. The withdrawal happens before the money has even arrived.",
+  incorrectMsg: "Not quite — compare each due date to Riley's nearest payday. Which bill's date comes BEFORE her paycheck has posted?",
+  justifyPrompt: "Explain why, using the reading."
+};
+MCQ_CONFIGS['act-accounts'] = {
+  prompt: "Which account fits Riley best?",
+  options: ["Sunrise Basic", "Sunrise Plus", "Sunrise Free Checking"],
+  correct: 1,
+  correctMsg: "Right — the $12 fee is waived since she has direct deposit, and $0 overdraft fee protects her from her low-balance dips.",
+  incorrectMsg: "Not quite — look at which account avoids fees for the SPECIFIC habits Riley actually has (low balance dips, direct deposit, one ATM use).",
+  justifyPrompt: "Explain your choice using the visible cost vs. hidden cost lens."
+};
+
+// ---------- Section 2 activity: Which Tool, Which Reason (8 scenarios) ----------
+const TOOL_SCENARIOS = [
+  { id: 'tool1', text: "Splitting a $40 dinner bill with your roommate.", options: ["Zelle / P2P app (trusted person)", "Card or wallet with purchase protection", "Digital wallet at checkout"], correct: 0 },
+  { id: 'tool2', text: "Buying concert tickets from a stranger you found on Instagram.", options: ["Zelle / P2P app (trusted person)", "Card or wallet with purchase protection", "Digital wallet at checkout"], correct: 1 },
+  { id: 'tool3', text: "Tipping a barista who has a QR code at the register.", options: ["Zelle / P2P app (trusted person)", "Card or wallet with purchase protection", "Digital wallet at checkout"], correct: 2 },
+  { id: 'tool4', text: "Paying a contractor $500 for finished work you already inspected.", options: ["Zelle / P2P app (trusted person)", "Card or wallet with purchase protection", "Digital wallet at checkout"], correct: 0 },
+  { id: 'tool5', text: "Sending your cousin $20 for their birthday.", options: ["Zelle / P2P app (trusted person)", "Card or wallet with purchase protection", "Digital wallet at checkout"], correct: 0 },
+  { id: 'tool6', text: "Buying a used PS5 from a stranger on Facebook Marketplace, before you've seen it in person.", options: ["Zelle / P2P app (trusted person)", "Card or wallet with purchase protection", "Digital wallet at checkout"], correct: 1 },
+  { id: 'tool7', text: "Paying your monthly gym membership.", options: ["Zelle / P2P app (trusted person)", "Card or wallet with purchase protection", "Digital wallet at checkout"], correct: 2 },
+  { id: 'tool8', text: "Refunding a friend who covered your movie ticket.", options: ["Zelle / P2P app (trusted person)", "Card or wallet with purchase protection", "Digital wallet at checkout"], correct: 0 }
+];
+
+function renderToolsActivity() {
+  const container = document.getElementById('act-tools');
+  if (!container) return;
+  container.innerHTML = TOOL_SCENARIOS.map(s =>
+    '<div class="activity-item" id="wrap-' + s.id + '"></div>'
+  ).join('');
+  TOOL_SCENARIOS.forEach(s => {
+    MCQ_CONFIGS[s.id] = {
+      prompt: s.text, options: s.options, correct: s.correct,
+      correctMsg: "Good fit.", incorrectMsg: "Reasonable instinct, but reconsider who's being paid and what happens if it goes wrong.",
+      justifyPrompt: "Why?"
+    };
+    renderMCQItem('wrap-' + s.id, s.id, MCQ_CONFIGS[s.id]);
+  });
+}
+
+MCQ_CONFIGS['act-judge'] = {
+  prompt: "Is Maya right that this is the bank's fault?",
+  options: ["Yes — banks should catch this kind of mistake", "No — this was an authorized transaction Maya approved herself", "It depends on how much money was involved"],
+  correct: 1,
+  correctMsg: "Right — Maya told the system to send the money. Because she authorized it herself (even by mistake), the usual fraud protections don't apply the same way.",
+  incorrectMsg: "Not quite — think back to the authorized vs. unauthorized distinction. Who actually pressed send here?",
+  justifyPrompt: "Explain your answer using authorized vs. unauthorized transactions."
+};
+
+// ---------- Section 3 activity: Spot the Scam (checkboxes) ----------
+const SPOT_MESSAGES = [
+  {
+    id: 'spot1', label: 'Message 1 — Text',
+    text: '"Sunrise Bank: We detected unusual activity. Verify now within 24 hrs or your card will be suspended: [link]"',
+    flags: ["Urgency / a deadline", "Asks you to click a link", "Asks for personal info directly in the message", "Comes from a text message"],
+    correctSet: [0, 1]
+  },
+  {
+    id: 'spot2', label: 'Message 2 — Phone call',
+    text: '"Caller: \'This is Sunrise Bank Fraud Department. We see a suspicious $800 charge. To protect your funds, I need you to transfer your balance to this new secure account we\'re setting up for you right now.\'"',
+    flags: ["Claims to be the bank", "Asks you to transfer money to \u201Cprotect\u201D it", "Creates urgency (\u201Cright now\u201D)", "Calls during the day"],
+    correctSet: [1, 2]
+  },
+  {
+    id: 'spot3', label: 'Message 3 — Marketplace DM',
+    text: '"Buyer: \'Just sent $120 for the shoes via Cash App! Here\'s my payment screenshot. Can you ship today? I need them by Friday for a gift!\'"',
+    flags: ["Sends a screenshot instead of a real payment showing in your app", "Pressures fast shipping before you can verify", "Uses Cash App", "Wants the shoes as a gift"],
+    correctSet: [0, 1]
+  }
+];
+
+function renderSpotScam() {
+  const container = document.getElementById('act-spot');
+  if (!container) return;
+  container.innerHTML = SPOT_MESSAGES.map(m =>
+    '<div class="activity-item">' +
+      '<div class="item-prompt">' + m.label + '</div>' +
+      '<div style="font-family:Georgia, serif; font-size:0.95rem; margin-bottom:8px;">' + m.text + '</div>' +
+      m.flags.map((f, i) =>
+        '<div class="flag-checkbox-row"><input type="checkbox" id="' + m.id + '-flag-' + i + '"><label for="' + m.id + '-flag-' + i + '">' + f + '</label></div>'
+      ).join('') +
+      '<div class="item-justify-label">What would you actually do?</div>' +
+      '<textarea id="' + m.id + '-justify" placeholder="Type your answer..."></textarea>' +
+      '<button onclick="checkSpotScam(\'' + m.id + '\')">Check</button>' +
+      '<div class="focus-result" id="' + m.id + '-result"></div>' +
+    '</div>'
+  ).join('');
+
+  SPOT_MESSAGES.forEach(m => {
+    document.getElementById(m.id + '-justify').addEventListener('input', () => {
+      saveActivityAnswer(m.id + '_justify', document.getElementById(m.id + '-justify').value);
+    });
+  });
+}
+
+function checkSpotScam(msgId) {
+  const m = SPOT_MESSAGES.find(x => x.id === msgId);
+  const picked = [];
+  m.flags.forEach((f, i) => { if (document.getElementById(msgId + '-flag-' + i).checked) picked.push(i); });
+  const correctSet = m.correctSet;
+  const gotAllCorrect = correctSet.every(i => picked.includes(i));
+  const noExtras = picked.every(i => correctSet.includes(i));
+  const perfect = gotAllCorrect && noExtras;
+  saveActivityAnswer(msgId, { picked: picked, perfect: perfect });
+
+  const result = document.getElementById(msgId + '-result');
+  result.className = 'focus-result ' + (perfect ? 'correct' : 'incorrect');
+  if (perfect) {
+    result.textContent = '✓ You found exactly the real red flags in this message.';
+  } else {
+    const missed = correctSet.filter(i => !picked.includes(i)).length;
+    const extra = picked.filter(i => !correctSet.includes(i)).length;
+    let msg = 'Not quite exact — ';
+    if (missed) msg += 'you missed ' + missed + ' real red flag(s). ';
+    if (extra) msg += 'you flagged ' + extra + ' thing(s) that aren\'t actually red flags on their own. ';
+    result.textContent = msg;
+  }
+}
+
+// ---------- Section 3 activity: Real or Scam? ----------
+const REALSCAM_ITEMS = [
+  { id: 'rs1', text: '"Sunrise Bank: A $45.20 purchase was made at Target on your card ending in 4821. Reply STOP to opt out of alerts."', isScam: false, explain: "No link, no urgency, no request for information — a routine transaction alert." },
+  { id: 'rs2', text: '"Sunrise Bank: Your direct deposit of $412.00 has posted to your account ending in 4821."', isScam: false, explain: "A routine notification confirming something that already happened — nothing is being requested." },
+  { id: 'rs3', text: '"Sunrise Bank: Your account balance is below $20. Log in through our app to view details."', isScam: false, explain: "No outside link — it points you to your own app, not somewhere new." },
+  { id: 'rs4', text: '"Sunrise Bank ALERT: Suspicious login detected. Confirm your identity within 1 hour or lose account access: [link]"', isScam: true, explain: "Urgency (1 hour) plus a link asking you to \u201Cconfirm your identity\u201D — classic phishing." },
+  { id: 'rs5', text: '"This is Sunrise Bank Security. We\'re moving your funds to a protected account — please confirm by sending a verification transfer of $500."', isScam: true, explain: "No real bank ever asks you to send yourself money to \u201Cprotect\u201D it — this is the self-payment scam." },
+  { id: 'rs6', text: '"Hi! I paid for your bike on Venmo — check your email for the receipt, it\'s pending, please ship ASAP!"', isScam: true, explain: "A screenshot/receipt claim instead of money actually showing in your app, plus pressure to ship fast." }
+];
+
+function renderRealScam() {
+  const container = document.getElementById('act-realscam');
+  if (!container) return;
+  container.innerHTML = REALSCAM_ITEMS.map(item =>
+    '<div class="activity-item">' +
+      '<div style="font-family:Georgia, serif; font-size:0.95rem;">' + item.text + '</div>' +
+      '<div class="rs-btn-row">' +
+        '<button id="' + item.id + '-real" onclick="pickRealScam(\'' + item.id + '\', false)">Real</button>' +
+        '<button id="' + item.id + '-scam" onclick="pickRealScam(\'' + item.id + '\', true)">Scam</button>' +
+      '</div>' +
+      '<div class="focus-result" id="' + item.id + '-result"></div>' +
+    '</div>'
+  ).join('');
+}
+
+function pickRealScam(id, guessedScam) {
+  const item = REALSCAM_ITEMS.find(x => x.id === id);
+  const correct = guessedScam === item.isScam;
+  saveActivityAnswer(id, { guessedScam: guessedScam, correct: correct });
+
+  document.getElementById(id + '-real').classList.toggle('picked-real', !guessedScam);
+  document.getElementById(id + '-scam').classList.toggle('picked-scam', guessedScam);
+
+  const result = document.getElementById(id + '-result');
+  result.className = 'focus-result ' + (correct ? 'correct' : 'incorrect');
+  result.textContent = (correct ? '✓ Correct — ' : '✗ Actually ' + (item.isScam ? 'a scam' : 'real') + ' — ') + item.explain;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderToolsActivity();
+  renderSpotScam();
+  renderRealScam();
+  Object.keys(MCQ_CONFIGS).forEach(key => {
+    if (!document.getElementById(key)) return; // tool scenarios rendered separately above
+    if (document.getElementById(key).children.length) return; // already rendered (tool items)
+    renderMCQItem(key, key, MCQ_CONFIGS[key]);
+  });
+});
+
+// ============================================================
+// CLOSING VOCAB ACTIVITY: sort into buckets + fill-in-the-blank
+// ============================================================
+const SORT_BUCKETS = ['Convenience Tools', 'Moving Money', 'Protection'];
+const SORT_KEY = {
+  'direct deposit': 0, 'online bill pay': 0, 'mobile deposit': 0,
+  'digital wallet': 1, 'p2p payment': 1,
+  'two-factor authentication': 2, 'transaction alert': 2, 'phishing': 2
+};
+
+function renderSortActivity() {
+  const container = document.getElementById('act-sort');
+  if (!container) return;
+  container.innerHTML = VOCAB_LIST.map(v =>
+    '<div class="sort-row"><span>' + v.label + '</span>' +
+    '<select id="sort-' + v.term.replace(/\s/g, '-') + '" data-term="' + v.term + '">' +
+      '<option value="">Choose a category...</option>' +
+      SORT_BUCKETS.map((b, i) => '<option value="' + i + '">' + b + '</option>').join('') +
+    '</select></div>'
+  ).join('') + '<button onclick="checkSort()">Check my sorting</button>';
+}
+
+function checkSort() {
+  let correctCount = 0;
+  VOCAB_LIST.forEach(v => {
+    const sel = document.getElementById('sort-' + v.term.replace(/\s/g, '-'));
+    if (sel.value !== '' && parseInt(sel.value, 10) === SORT_KEY[v.term]) correctCount++;
+  });
+  saveActivityAnswer('vocab_sort_score', correctCount);
+  document.getElementById('sort-result').textContent = correctCount + ' of ' + VOCAB_LIST.length + ' correctly sorted.';
+}
+
+const FILL_BLANK_KEY = ['direct deposit', 'transaction alert', 'p2p payment', 'phishing', 'two-factor authentication', 'digital wallet', 'online bill pay', 'mobile deposit'];
+
+function renderFillBlank() {
+  const container = document.getElementById('act-fillblank');
+  if (!container) return;
+  const optionsHtml = '<option value="">choose...</option>' + VOCAB_LIST.map(v => '<option value="' + v.term + '">' + v.label + '</option>').join('');
+  const blank = (n) => '<select class="blank-select" id="fb-' + n + '">' + optionsHtml + '</select>';
+
+  container.innerHTML =
+    'Riley\'s day started when she set up ' + blank(1) + ' so her paycheck would go straight into her account. ' +
+    'She also turned on a ' + blank(2) + ' to warn her if her balance got too low. ' +
+    'When she sold her sneakers, the buyer tried to pay using a ' + blank(3) + ' app, but only sent a fake screenshot instead of real money. ' +
+    'That night, Riley got a text that looked like ' + blank(4) + ', trying to trick her into clicking a link. ' +
+    'If she ever wanted extra security logging in, she could turn on ' + blank(5) + '. ' +
+    'When she buys her morning coffee by tapping her phone at checkout, she\'s using a ' + blank(6) + '. ' +
+    'She also scheduled ' + blank(7) + ' so her rent payment would go out automatically every month. ' +
+    'And when her grandma mailed her a paper check, Riley used ' + blank(8) + ' to deposit it without leaving her apartment.';
+}
+
+function checkFillBlank() {
+  let correctCount = 0;
+  FILL_BLANK_KEY.forEach((term, i) => {
+    const sel = document.getElementById('fb-' + (i + 1));
+    if (sel.value === term) correctCount++;
+    sel.style.borderColor = sel.value === '' ? '#999' : (sel.value === term ? '#4a8f52' : '#b8493d');
+  });
+  saveActivityAnswer('fill_blank_score', correctCount);
+  document.getElementById('fillblank-result').textContent = correctCount + ' of ' + FILL_BLANK_KEY.length + ' correct.';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderSortActivity();
+  renderFillBlank();
+});
+
+// ============================================================
 // "Try first" enforcement + paste blocking
 // ============================================================
 function wireTryFirst(inputId, buttonId, minChars) {
@@ -727,7 +1170,8 @@ function collectState() {
     focusAnswersTotal: Object.keys(FOCUS_QUESTIONS).length,
     vocabUsed: getUsedVocab(),
     vocabList: VOCAB_LIST.map(v => v.term),
-    gatesPassed: gatesPassed
+    gatesPassed: gatesPassed,
+    activityAnswers: activityAnswers
   };
 }
 
@@ -765,8 +1209,10 @@ async function loadState() {
     }
   });
 
+  if (data.activityAnswers) activityAnswers = data.activityAnswers;
+
   renderVocabChecklist(getUsedVocab());
-  status.textContent = 'Work loaded.';
+  status.textContent = 'Work loaded. Section activity picks may need to be re-selected, but nothing is lost — your saved answers are attached to your record.';
 }
 
 async function submitWork() {
