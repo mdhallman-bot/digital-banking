@@ -302,6 +302,30 @@
       protections P2P apps don't have. Match the tool to the relationship, not just the moment.</p>
     </div>
 
+    <div class="reading-box">
+      <div class="reading-title">Reading: How "Purchase Protection" Actually Works</div>
+      <p>Not every P2P app protects you the same way &mdash; and the differences matter more than people
+      think.</p>
+      <p><strong>PayPal</strong> is the only one where buyer protection is automatic. If you pay someone
+      through PayPal's "Goods and Services" option, you're covered if the item never arrives or isn't as
+      described. But if you pay "Friends and Family" instead &mdash; even to the same person, for the same
+      item &mdash; you give up that protection entirely.</p>
+      <p><strong>Venmo's</strong> Purchase Protection exists, but only if you actively turn it on during
+      checkout. Even then, it doesn't cover everything: items picked up in person, vehicles, real estate, and
+      gift cards are excluded, among others.</p>
+      <p><strong>Cash App</strong> has no purchase protection at all. Its only real safety net is for a
+      transaction you never authorized in the first place &mdash; not for a payment you chose to send that
+      turned out to be a scam.</p>
+      <p>The pattern: protection is the exception, not the rule, and it usually requires you to do something
+      specific to turn it on.</p>
+    </div>
+
+    <div class="activity-block">
+      <div class="activity-title">Check Your Understanding: Purchase Protection</div>
+      <div class="activity-item" id="act-protection1"></div>
+      <div class="activity-item" id="act-protection2"></div>
+    </div>
+
     <div class="activity-block">
       <div class="activity-title">Activity: Which Tool, Which Reason?</div>
       <p style="font-family:Arial, sans-serif; font-size:0.88rem;">For each situation, pick the best tool and explain why in one sentence.</p>
@@ -845,6 +869,21 @@ MCQ_CONFIGS['act-judge'] = {
   correctMsg: "Right — Maya told the system to send the money. Because she authorized it herself (even by mistake), the usual fraud protections don't apply the same way.",
   incorrectMsg: "Not quite — think back to the authorized vs. unauthorized distinction. Who actually pressed send here?",
   justifyPrompt: "Explain your answer using authorized vs. unauthorized transactions."
+};
+
+MCQ_CONFIGS['act-protection1'] = {
+  prompt: "Which payment option gives you buyer protection automatically, without doing anything extra?",
+  options: ["PayPal — Friends and Family", "PayPal — Goods and Services", "Venmo — default setting", "Cash App — default setting"],
+  correct: 1,
+  correctMsg: "Right — PayPal's Goods and Services option is the only one that's protected by default.",
+  incorrectMsg: "Not quite — re-read which option requires no extra step from you."
+};
+MCQ_CONFIGS['act-protection2'] = {
+  prompt: "On Venmo, what's the one thing that must happen for Purchase Protection to apply?",
+  options: ["The seller has a long sales history", "The buyer turns on Purchase Protection at checkout", "The payment is under $50", "Nothing — it's automatic, like PayPal"],
+  correct: 1,
+  correctMsg: "Right — Venmo's protection is optional and has to be turned on during checkout.",
+  incorrectMsg: "Not quite — Venmo's protection isn't automatic like PayPal's. What action does the buyer have to take?"
 };
 
 // ---------- Section 3 activity: Spot the Scam (checkboxes) ----------
