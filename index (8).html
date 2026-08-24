@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Riley's Banking Day — Digital Banking</title>
+<style>
+  :root {
+    --ink: #2a2a2a; --paper: #faf8f3;
+    --navy: #1E2761; --navy-dark: #141A45; --gold: #C9A227; --gold-light: #F4E9C9;
+    --green: #cfead0; --green-strong: #4a8f52; --red: #f3d2ce; --red-strong: #b8493d;
+    --panel: #eef0f8;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: Georgia, 'Times New Roman', serif; max-width: 900px; margin: 0 auto; padding: 20px; line-height: 1.6; color: var(--ink); background: #fff; }
+  h1 { font-family: Arial, sans-serif; font-size: 1.6rem; margin-bottom: 4px; color: var(--navy); }
+  h2 { font-family: Arial, sans-serif; font-size: 1.2rem; margin-top: 2.4em; border-bottom: 2px solid var(--gold); padding-bottom: 5px; color: var(--navy); }
+  h3 { font-family: Arial, sans-serif; font-size: 1rem; margin: 1em 0 4px 0; color: var(--navy); }
+  .subtitle { color: #555; font-family: Arial, sans-serif; font-size: 0.95rem; margin-bottom: 1.2em; }
+  .rubric-note { background: var(--panel); border-left: 4px solid var(--navy); padding: 12px 16px; font-family: Arial, sans-serif; font-size: 0.88rem; }
+
+  .id-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; background: var(--panel); padding: 12px 16px; margin: 16px 0; border-radius: 4px; }
+  .id-bar input { padding: 6px 8px; font-size: 14px; font-family: Arial, sans-serif; }
+  .try-first-note { font-family: Arial, sans-serif; font-size: 0.78rem; color: #888; margin: 4px 0; }
+
+  button { font-family: Arial, sans-serif; padding: 8px 14px; font-size: 13.5px; cursor: pointer; border: 1px solid var(--navy); background: #fff; color: var(--navy); border-radius: 4px; margin: 4px 6px 4px 0; }
+  button:hover { background: var(--navy); color: #fff; }
+  button.primary { background: var(--navy); color: #fff; }
+  button.gold { border-color: var(--gold); color: #8a6d1a; }
+  button.gold:hover { background: var(--gold); color: #1a1400; }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .save-indicator { font-family: Arial, sans-serif; font-size: 0.8rem; color: #888; margin-top: 4px; }
+  .paste-warning { color: #a33; font-size: 12.5px; margin-top: 4px; font-family: Arial, sans-serif; display: none; }
+
+  textarea, input[type=text] { width: 100%; min-height: 70px; font-family: inherit; font-size: 14.5px; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+  textarea.big { min-height: 130px; }
+
+  /* ---------- Feature figure (title slide, vocab recap slide) ---------- */
+  .feature-figure { text-align: center; margin: 14px 0 22px 0; }
+  .feature-figure img { max-width: 640px; width: 100%; border: 1px solid #ddd; border-radius: 6px; }
+  .feature-figure .caption { font-family: Arial, sans-serif; font-size: 0.8rem; color: #777; margin-top: 6px; }
+
+  /* ---------- Vocabulary preview: image-strip ---------- */
+  .vocab-preview { background: var(--panel); border-radius: 6px; padding: 16px 18px; margin: 14px 0; }
+  .vocab-preview h3 { margin-top: 0; }
+  .image-strip { display: flex; gap: 14px; flex-wrap: wrap; margin: 10px 0; }
+  .image-strip-item { width: 140px; font-family: Arial, sans-serif; text-align: center; }
+  .image-strip-item .thumb-box { width: 140px; height: 100px; background: #fff; border: 1px dashed #b7bcd6; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .image-strip-item .thumb-box img { max-width: 100%; max-height: 100%; }
+  .image-strip-item .thumb-placeholder { font-size: 0.7rem; color: #99a; padding: 6px; }
+  .image-strip-item .term-label { font-weight: bold; font-size: 0.82rem; margin-top: 6px; color: var(--navy); }
+  .image-strip-item .term-def { font-size: 0.75rem; color: #555; margin-top: 2px; }
+  .hover-only-list { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; font-family: Arial, sans-serif; font-size: 0.85rem; }
+  .hover-only-chip { background: #fff; border: 1px solid #b7bcd6; border-radius: 12px; padding: 4px 10px; color: var(--navy); }
+
+  /* ---------- Interactive vocab checklist (used-word detection) ---------- */
+  .vocab-checklist { display: flex; gap: 8px; flex-wrap: wrap; font-family: Arial, sans-serif; font-size: 0.85rem; margin: 8px 0; }
+  .vocab-chip { padding: 4px 10px; border-radius: 12px; border: 1px solid #ccc; background: #eee; color: #777; cursor: pointer; }
+  .vocab-chip:hover { border-color: var(--navy); }
+  .vocab-chip.used { background: var(--green); border-color: var(--green-strong); color: #245c29; font-weight: bold; }
+  .vocab-definition { display: none; font-family: Arial, sans-serif; font-size: 0.85rem; background: var(--panel); padding: 8px 12px; border-radius: 4px; margin-top: 6px; }
+  .vocab-definition.show { display: block; }
+  .vocab-status { font-family: Arial, sans-serif; font-size: 0.85rem; margin-top: 4px; }
+
+  /* ---------- Hover/tap glossary (incidental vocabulary) ---------- */
+  .gloss-word { border-bottom: 1px dotted var(--navy); cursor: pointer; position: relative; }
+  .gloss-tooltip { position: absolute; z-index: 10; background: var(--navy); color: #fff; font-family: Arial, sans-serif; font-size: 0.8rem; padding: 8px 10px; border-radius: 5px; max-width: 240px; box-shadow: 0 3px 10px rgba(0,0,0,0.2); }
+
+  /* ---------- Section wrapper / gating ---------- */
+  .section-wrap { border: 1px solid #e2e4ee; border-radius: 8px; padding: 4px 20px 20px 20px; margin: 18px 0; background: #fff; }
+  .section-title-bar { display: flex; align-items: center; gap: 10px; margin: 14px 0 6px 0; }
+  .section-title-bar .num { background: var(--navy); color: var(--gold); font-family: Arial, sans-serif; font-weight: bold; font-size: 0.95rem; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .section-title-bar h2 { border-bottom: none; margin: 0; padding: 0; }
+
+  .decision-content { display: none; margin-top: 14px; }
+  .decision-content.unlocked { display: block; }
+  .locked-note { font-family: Arial, sans-serif; font-size: 0.88rem; color: #8a6d1a; background: var(--gold-light); padding: 10px 14px; border-radius: 5px; margin-top: 10px; }
+
+  /* ---------- Slide gate viewer ---------- */
+  .slide-gate { background: var(--navy); border-radius: 8px; padding: 14px; margin: 10px 0 16px 0; text-align: center; }
+  .slide-gate img { max-width: 100%; width: 640px; border-radius: 5px; display: block; margin: 0 auto; }
+  .slide-gate-controls { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 10px; font-family: Arial, sans-serif; }
+  .slide-gate-controls button { margin: 0; }
+  .slide-counter { color: #fff; font-size: 0.85rem; }
+  .gate-status { font-family: Arial, sans-serif; font-size: 0.82rem; color: var(--gold-light); margin-top: 8px; }
+  .gate-passed-banner { font-family: Arial, sans-serif; font-size: 0.85rem; color: #245c29; background: var(--green); padding: 8px 12px; border-radius: 5px; margin-top: 8px; display: none; }
+
+  /* ---------- Scenario prose ---------- */
+  .scenario-box { background: var(--paper); padding: 14px 18px; border-left: 4px solid var(--gold); margin: 10px 0; font-size: 1.02rem; }
+
+  /* ---------- Non-AI focus questions (self-checking, no backend) ---------- */
+  .focus-q { background: var(--panel); border-radius: 6px; padding: 12px 16px; margin: 10px 0; }
+  .focus-q .prompt { font-family: Arial, sans-serif; font-size: 0.92rem; font-weight: bold; margin-bottom: 8px; }
+  .focus-q .opt-row { font-family: Arial, sans-serif; font-size: 0.9rem; margin: 4px 0; display: flex; align-items: center; gap: 6px; }
+  .focus-q .opt-row label { cursor: pointer; }
+  .focus-result { font-family: Arial, sans-serif; font-size: 0.85rem; margin-top: 8px; display: none; padding: 8px 10px; border-radius: 4px; }
+  .focus-result.correct { background: var(--green); color: #245c29; display: block; }
+  .focus-result.incorrect { background: var(--red); color: #7a2e25; display: block; }
+
+  /* ---------- AI synthesis question ---------- */
+  .guided-block { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 14px 16px; margin: 12px 0 8px 0; }
+  .guided-question { font-family: Arial, sans-serif; font-size: 0.95rem; margin-bottom: 8px; font-weight: bold; color: var(--navy); }
+  .helper-panel { background: var(--panel); border-left: 4px solid var(--navy); padding: 12px 16px; margin-top: 8px; white-space: pre-wrap; font-family: Arial, sans-serif; font-size: 0.92rem; }
+  .locked { color: #999; font-style: italic; }
+
+  .completion-box { margin-top: 14px; padding: 14px 18px; border-radius: 4px; font-family: Arial, sans-serif; }
+  .completion-box.pass { background: #e4f4e6; border-left: 4px solid var(--green-strong); }
+  .completion-box.incomplete { background: #fdf1e4; border-left: 4px solid #c98a2c; }
+  .completion-box ul { margin: 6px 0 0 0; padding-left: 18px; font-size: 0.85rem; }
+
+  .mock-banner { background: #eef1fb; border-left: 4px solid #4a5fa8; padding: 10px 16px; font-family: Arial, sans-serif; font-size: 0.85rem; margin: 16px 0 10px 0; }
+  .mock-cards { display: flex; gap: 14px; flex-wrap: wrap; }
+  .mock-card { flex: 1; min-width: 260px; background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 14px 16px; font-family: Arial, sans-serif; }
+  .mock-card h4 { margin: 0 0 4px 0; font-size: 0.95rem; }
+  .mock-card .range { font-weight: bold; color: #4a5fa8; margin-bottom: 6px; }
+  .mock-card .improve { margin-top: 8px; padding-top: 8px; border-top: 1px dashed #ccc; font-size: 0.85rem; }
+
+  @media print {
+    button, .id-bar, .slide-gate { display: none !important; }
+    body.printing > *:not(#print-summary) { display: none !important; }
+    #print-summary { display: block !important; }
+  }
+  #print-summary { display: none; font-family: Georgia, serif; }
+  #print-summary h2 { border-bottom: 1px solid #999; margin-top: 1.4em; }
+  #print-summary .p-block { white-space: pre-wrap; margin: 6px 0 14px 0; }
+  #print-summary .p-label { font-family: Arial, sans-serif; font-weight: bold; font-size: 0.85rem; color: var(--navy); margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<h1>Riley's Banking Day</h1>
+<div class="subtitle">Unit 2: Banking — Day 4 — Digital Banking (SQ3): How can I use online banking to increase convenience and financial stability?</div>
+
+<div class="rubric-note">
+  <strong>What this feeds into:</strong> Today's grade is completion, not a number — finish all three
+  Decision Points, use your vocabulary, and submit. A "practice score preview" appears after you submit,
+  showing how your reasoning would score on Application of Concepts and Reasoning &amp; Vocabulary Use —
+  that preview is practice, not your official grade.
+</div>
+
+<div class="feature-figure">
+  <img src="slides/slide-01.jpg" alt="Digital Banking title slide">
+  <div class="caption">Today you'll walk through Riley's banking day — three real decisions, one at a time.</div>
+</div>
+
+<div class="id-bar">
+  <label for="student-id">Your Name:</label>
+  <input id="student-id" type="text" placeholder="e.g. Jamie Smith">
+  <button onclick="loadState()">Load my saved work</button>
+  <span id="load-status" class="save-indicator"></span>
+</div>
+<div class="try-first-note" style="margin-top:-8px;">Use your first and last name, spelled the same way every time — this is how your work is found and saved. No teacher is running today's class live, so your progress through the slides and questions below is saved automatically as you go.</div>
+
+<!-- ============ OPENING WRITE ============ -->
+<h2>Before You Start: Make a Prediction</h2>
+<p style="font-family:Arial, sans-serif; font-size:0.9rem; color:#555;">
+  <strong>Scenario:</strong> Riley just started a part-time job. Today, Riley is going to make three separate
+  banking decisions: how to set up her paycheck and bills, how to handle a payment from a stranger, and how
+  to respond to a text that looks like it's from her bank.
+</p>
+<textarea id="opening-write" placeholder="Which of Riley's three decisions do you predict will be easiest for her to get right, and which will be trickiest? Why?"></textarea>
+<div class="save-indicator" id="opening-save-status"></div>
+
+<!-- ============ VOCABULARY PREVIEW ============ -->
+<div class="vocab-preview">
+  <h3>Vocabulary Preview</h3>
+  <p style="font-family:Arial, sans-serif; font-size:0.85rem; color:#555; margin-top:-4px;">
+    These 6 words show up across today's decisions — a picture is next to each one below.
+  </p>
+  <div class="image-strip" id="image-strip"></div>
+  <p style="font-family:Arial, sans-serif; font-size:0.85rem; color:#555; margin-bottom:4px;">Two more words you'll see and use today:</p>
+  <div class="hover-only-list" id="hover-only-list"></div>
+</div>
+
+<!-- ============ DECISION POINT 1 ============ -->
+<div class="section-wrap">
+  <div class="section-title-bar"><div class="num">1</div><h2>Convenience Tools &amp; Their Limits</h2></div>
+  <p style="font-family:Arial, sans-serif; font-size:0.88rem; color:#555;">Click through the slides below first — the "Continue" section below unlocks once you've seen all of them.</p>
+  <div class="slide-gate" id="gate-gate1"></div>
+
+  <div class="decision-content" id="content-gate1">
+    <h3>Riley's Decision: Setting Up Her Account</h3>
+    <div class="scenario-box">
+      Riley just started her first job at Sunrise Coffee. Her manager hands her a form: direct deposit or
+      paper check, and whether to set up autopay for her phone bill. Riley picks direct deposit and turns on
+      autopay. She also turns on a transaction alert set to fire if her balance drops below $20.
+      <br><br>
+      Two months later: her balance is $30. She buys a $12 coffee on the way to work. The purchase goes
+      through — then, a few minutes later, the alert fires: balance now $18. Riley hasn't opted into
+      <span class="gloss-word" data-def="A bank setting that lets a purchase go through even if you don't have enough money — usually for a fee. Without it, the purchase is just declined instead.">overdraft coverage</span>,
+      so if she'd tried to spend more than she had, the purchase would have simply been declined instead of
+      going through with a fee.
+    </div>
+
+    <div class="focus-q" id="focus-dp1a"></div>
+    <div class="focus-q" id="focus-dp1b"></div>
+
+    <div class="guided-block">
+      <div class="guided-question">Explain what happened with Riley's alert, and what she should do differently going forward to avoid this surprise.</div>
+      <textarea class="big" id="answer-dp1" placeholder="Type your explanation here..."></textarea>
+      <div class="try-first-note">Try your own answer first — the check button unlocks after a few sentences.</div>
+      <button id="checkbtn-dp1" onclick="checkGuided('dp1', 'Decision Point 1: Convenience Tools', 'scenario-dp1', 'Explain what happened with Riley\'s alert, and what she should do differently going forward to avoid this surprise.')" disabled>Check my reasoning</button>
+      <div class="helper-panel" id="feedback-dp1" style="display:none;"></div>
+      <div class="paste-warning" id="paste-warning-dp1">Pasting is disabled here — type your own thinking.</div>
+    </div>
+  </div>
+  <div class="locked-note" id="locked-note-gate1">Finish clicking through the slides above to unlock Riley's decision.</div>
+</div>
+
+<!-- ============ DECISION POINT 2 ============ -->
+<div class="section-wrap">
+  <div class="section-title-bar"><div class="num">2</div><h2>Moving Money: P2P &amp; Digital Wallets</h2></div>
+  <p style="font-family:Arial, sans-serif; font-size:0.88rem; color:#555;">Click through the slides below first — the "Continue" section below unlocks once you've seen all of them.</p>
+  <div class="slide-gate" id="gate-gate2"></div>
+
+  <div class="decision-content" id="content-gate2">
+    <h3>Riley's Decision: Selling Her Sneakers</h3>
+    <div class="scenario-box">
+      Riley posts her old sneakers for sale online, asking $60. A buyer messages: "I'll send it right now on
+      Cash App." A few minutes later, the buyer sends a screenshot: "Payment sent — check your app!" But
+      Riley's Cash App balance still shows $0 from this buyer. The buyer says, "It's probably just pending,
+      go ahead and ship them today so they arrive by the weekend." Riley's Cash App balance is
+      <span class="gloss-word" data-def="Protected by the federal government if the bank fails — up to $250,000 per account. A balance sitting in an app like Cash App is only covered under specific conditions, like having an active debit card linked.">FDIC insured</span>
+      only if she's linked a Cash Card to her account.
+    </div>
+
+    <div class="focus-q" id="focus-dp2a"></div>
+    <div class="focus-q" id="focus-dp2b"></div>
+
+    <div class="guided-block">
+      <div class="guided-question">Riley is being pressured to ship before she can verify the payment. Using what you learned about how P2P payments actually work, explain what Riley should do and why.</div>
+      <textarea class="big" id="answer-dp2" placeholder="Type your explanation here..."></textarea>
+      <div class="try-first-note">Try your own answer first — the check button unlocks after a few sentences.</div>
+      <button id="checkbtn-dp2" onclick="checkGuided('dp2', 'Decision Point 2: P2P &amp; Digital Wallets', 'scenario-dp2', 'Riley is being pressured to ship before she can verify the payment. Using what you learned about how P2P payments actually work, explain what Riley should do and why.')" disabled>Check my reasoning</button>
+      <div class="helper-panel" id="feedback-dp2" style="display:none;"></div>
+      <div class="paste-warning" id="paste-warning-dp2">Pasting is disabled here — type your own thinking.</div>
+    </div>
+  </div>
+  <div class="locked-note" id="locked-note-gate2">Finish clicking through the slides above to unlock Riley's decision.</div>
+</div>
+
+<!-- ============ DECISION POINT 3 ============ -->
+<div class="section-wrap">
+  <div class="section-title-bar"><div class="num">3</div><h2>Protecting Your Money: Fraud &amp; Security</h2></div>
+  <p style="font-family:Arial, sans-serif; font-size:0.88rem; color:#555;">Click through the slides below first — the "Continue" section below unlocks once you've seen all of them.</p>
+  <div class="slide-gate" id="gate-gate3"></div>
+
+  <div class="decision-content" id="content-gate3">
+    <h3>Riley's Decision: A Text From "The Bank"</h3>
+    <div class="scenario-box">
+      That night, Riley gets a text: <em>"Sunrise Bank Alert: Your account will be locked in 24 hours due to
+      suspicious activity. Click here to verify your identity."</em> Riley's stomach drops — she doesn't want
+      to lose access to her paycheck. This would be an
+      <span class="gloss-word" data-def="A payment made without your knowledge or permission — like from a stolen card or hacked account.">unauthorized transaction</span>
+      if it were real, but the text itself is the actual danger here, not Riley's account.
+    </div>
+
+    <div class="focus-q" id="focus-dp3a"></div>
+    <div class="focus-q" id="focus-dp3b"></div>
+
+    <div class="guided-block">
+      <div class="guided-question">Explain why the urgency in this text is itself a red flag, and walk through exactly what Riley should do, step by step.</div>
+      <textarea class="big" id="answer-dp3" placeholder="Type your explanation here..."></textarea>
+      <div class="try-first-note">Try your own answer first — the check button unlocks after a few sentences.</div>
+      <button id="checkbtn-dp3" onclick="checkGuided('dp3', 'Decision Point 3: Fraud &amp; Security', 'scenario-dp3', 'Explain why the urgency in this text is itself a red flag, and walk through exactly what Riley should do, step by step.')" disabled>Check my reasoning</button>
+      <div class="helper-panel" id="feedback-dp3" style="display:none;"></div>
+      <div class="paste-warning" id="paste-warning-dp3">Pasting is disabled here — type your own thinking.</div>
+    </div>
+  </div>
+  <div class="locked-note" id="locked-note-gate3">Finish clicking through the slides above to unlock Riley's decision.</div>
+</div>
+
+<!-- ============ VOCAB RECAP BRIDGE ============ -->
+<div class="feature-figure">
+  <img src="slides/slide-24.jpg" alt="Vocabulary recap slide">
+  <div class="caption">All 8 words from today, in one place.</div>
+</div>
+
+<!-- ============ CLOSING WRITE ============ -->
+<h2>Your Analysis</h2>
+<div class="vocab-checklist" id="vocab-checklist"></div>
+<div class="vocab-status" id="vocab-status"></div>
+<div class="vocab-definition" id="vocab-definition"></div>
+
+<h2>After Riley's Day</h2>
+<p style="font-family:Arial, sans-serif; font-size:0.9rem; color:#555;">
+  Revisit your prediction from the start. Which decision turned out to be the trickiest for Riley? What's
+  ONE habit you'd tell Riley — and yourself — to build going forward?
+</p>
+<textarea class="big" id="closing-write" placeholder="Type your revised thinking here..."></textarea>
+<div class="save-indicator"></div>
+
+<!-- ============ SUBMIT / DOWNLOAD ============ -->
+<div style="margin-top:24px;">
+  <button class="primary" onclick="submitWork()">Submit for feedback</button>
+  <button onclick="downloadWork()">Download my work as PDF</button>
+</div>
+<div id="completion-area"></div>
+
+<div id="print-summary"></div>
+
+<!-- Hidden plain-text mirrors of each scenario, used as passageText sent to the AI coach -->
+<div id="scenario-dp1" style="display:none;">Riley just started her first job at Sunrise Coffee. She picks direct deposit and turns on autopay for her phone bill, plus a transaction alert set to fire if her balance drops below $20. Two months later her balance is $30. She buys a $12 coffee. The purchase goes through — then a few minutes later the alert fires, balance now $18. She hasn't opted into overdraft coverage, so an over-the-limit purchase would simply decline instead of going through with a fee.</div>
+<div id="scenario-dp2" style="display:none;">Riley posts her old sneakers for sale online, asking $60. A buyer says they sent payment on Cash App and sends a screenshot as proof, but Riley's Cash App balance still shows $0 from this buyer. The buyer pressures her to ship immediately, saying the payment is "probably just pending."</div>
+<div id="scenario-dp3" style="display:none;">Riley gets a text claiming to be from her bank: "Your account will be locked in 24 hours due to suspicious activity. Click here to verify your identity." She's worried about losing access to her paycheck.</div>
+
+<script>
+// ============================================================
+// CONFIG
+// ============================================================
+const APPS_SCRIPT_URL = 'REPLACE_WITH_DEPLOYED_WEB_APP_URL';
+const SHARED_SECRET = 'ptj2zrqdmt6n68xd'; // must match Code.gs exactly
+const MAX_CHECK_ATTEMPTS = 3;
+
+const GUIDED_KEYS = ['dp1', 'dp2', 'dp3'];
+
+// Tier 3 — image-anchored target vocabulary (Mark sources these images)
+const TIER3_VOCAB = [
+  { term: 'direct deposit', label: 'Direct Deposit', img: 'images/direct-deposit.jpg', definition: 'Your paycheck sent straight from your employer to your bank account — no check needed.' },
+  { term: 'online bill pay', label: 'Online Bill Pay', img: 'images/online-bill-pay.jpg', definition: 'Scheduling one-time or recurring payments straight from your bank account.' },
+  { term: 'mobile deposit', label: 'Mobile Deposit', img: 'images/mobile-deposit.jpg', definition: 'Depositing a check by photographing it with your banking app.' },
+  { term: 'digital wallet', label: 'Digital Wallet', img: 'images/digital-wallet.jpg', definition: 'An app that stores your card info so you can tap to pay at a business.' },
+  { term: 'p2p payment', label: 'P2P Payment', img: 'images/p2p-payment.jpg', definition: "Sending money directly to a person's account through an app like Venmo, Cash App, or Zelle." },
+  { term: 'two-factor authentication', label: 'Two-Factor Authentication (2FA)', img: 'images/two-factor-authentication.jpg', definition: 'A second verification step — like a text code — beyond just your password.' }
+];
+
+// Hover-only target vocabulary — same checklist/chip system, no image
+const HOVER_VOCAB = [
+  { term: 'transaction alert', label: 'Transaction Alert', definition: 'A text or email your bank sends about large purchases, withdrawals, or balance changes.' },
+  { term: 'phishing', label: 'Phishing / Scam', definition: 'A fake message designed to trick you into giving up personal or financial information.' }
+];
+
+const VOCAB_LIST = TIER3_VOCAB.concat(HOVER_VOCAB);
+const VOCAB_REQUIRED = Math.ceil(VOCAB_LIST.length * 0.5);
+
+// ---------- Slide gates ----------
+const SLIDE_GATES = [
+  { id: 'gate1', start: 2, end: 9 },
+  { id: 'gate2', start: 10, end: 16 },
+  { id: 'gate3', start: 17, end: 23 }
+];
+let gateCurrent = {};   // gateId -> current slide number being viewed
+let gateMaxReached = {}; // gateId -> highest slide number reached
+let gatesPassed = { gate1: false, gate2: false, gate3: false };
+
+function slidePath(n) {
+  return 'slides/slide-' + String(n).padStart(2, '0') + '.jpg';
+}
+
+function renderGate(gate) {
+  const container = document.getElementById('gate-' + gate.id);
+  if (!gateCurrent[gate.id]) gateCurrent[gate.id] = gate.start;
+  if (!gateMaxReached[gate.id]) gateMaxReached[gate.id] = gate.start;
+
+  const total = gate.end - gate.start + 1;
+  const idx = gateCurrent[gate.id] - gate.start + 1;
+
+  container.innerHTML =
+    '<img src="' + slidePath(gateCurrent[gate.id]) + '" alt="Slide ' + idx + ' of ' + total + '">' +
+    '<div class="slide-gate-controls">' +
+      '<button id="back-' + gate.id + '" onclick="gateNav(\'' + gate.id + '\', -1)">Back</button>' +
+      '<span class="slide-counter">Slide ' + idx + ' of ' + total + '</span>' +
+      '<button id="next-' + gate.id + '" onclick="gateNav(\'' + gate.id + '\', 1)">Next</button>' +
+    '</div>' +
+    '<div class="gate-status" id="status-' + gate.id + '"></div>';
+
+  updateGateButtons(gate);
+}
+
+function updateGateButtons(gate) {
+  const backBtn = document.getElementById('back-' + gate.id);
+  const nextBtn = document.getElementById('next-' + gate.id);
+  if (backBtn) backBtn.disabled = gateCurrent[gate.id] <= gate.start;
+  if (nextBtn) nextBtn.disabled = gateCurrent[gate.id] >= gate.end;
+
+  const status = document.getElementById('status-' + gate.id);
+  const seen = gateMaxReached[gate.id] - gate.start + 1;
+  const total = gate.end - gate.start + 1;
+  if (status) {
+    status.textContent = gatesPassed[gate.id]
+      ? 'All slides viewed — the decision below is unlocked.'
+      : 'Viewed ' + seen + ' of ' + total + ' slides. Keep clicking Next to unlock the decision below.';
+  }
+}
+
+function gateNav(gateId, dir) {
+  const gate = SLIDE_GATES.find(g => g.id === gateId);
+  let next = gateCurrent[gateId] + dir;
+  if (next < gate.start) next = gate.start;
+  if (next > gate.end) next = gate.end;
+  gateCurrent[gateId] = next;
+  if (next > gateMaxReached[gateId]) gateMaxReached[gateId] = next;
+
+  if (gateMaxReached[gateId] >= gate.end) {
+    unlockGate(gateId);
+  }
+  renderGate(gate);
+  scheduleAutoSave();
+}
+
+function unlockGate(gateId) {
+  if (gatesPassed[gateId]) return;
+  gatesPassed[gateId] = true;
+  const content = document.getElementById('content-' + gateId);
+  const lockedNote = document.getElementById('locked-note-' + gateId);
+  if (content) content.classList.add('unlocked');
+  if (lockedNote) lockedNote.style.display = 'none';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  SLIDE_GATES.forEach(renderGate);
+});
+
+// ============================================================
+// VOCABULARY PREVIEW (image-strip + hover-only chips)
+// ============================================================
+function renderVocabPreview() {
+  const strip = document.getElementById('image-strip');
+  strip.innerHTML = TIER3_VOCAB.map(v =>
+    '<div class="image-strip-item">' +
+      '<div class="thumb-box"><img src="' + v.img + '" alt="' + v.label + '" onerror="this.parentElement.innerHTML=\'<div class=&quot;thumb-placeholder&quot;>Image coming soon: ' + v.label + '</div>\'"></div>' +
+      '<div class="term-label">' + v.label + '</div>' +
+      '<div class="term-def">' + v.definition + '</div>' +
+    '</div>'
+  ).join('');
+
+  const hoverList = document.getElementById('hover-only-list');
+  hoverList.innerHTML = HOVER_VOCAB.map(v => '<span class="hover-only-chip">' + v.label + '</span>').join('');
+}
+
+// ---------- Interactive vocab checklist (used-word detection) ----------
+function renderVocabChecklist(usedTerms) {
+  const container = document.getElementById('vocab-checklist');
+  container.innerHTML = '';
+  VOCAB_LIST.forEach(v => {
+    const chip = document.createElement('span');
+    chip.className = 'vocab-chip' + (usedTerms.includes(v.term) ? ' used' : '');
+    chip.textContent = v.label;
+    chip.setAttribute('role', 'button');
+    chip.setAttribute('tabindex', '0');
+    chip.onclick = () => showDefinition(v.term);
+    chip.onkeypress = (e) => { if (e.key === 'Enter' || e.key === ' ') showDefinition(v.term); };
+    container.appendChild(chip);
+  });
+  document.getElementById('vocab-status').textContent =
+    usedTerms.length + ' of ' + VOCAB_REQUIRED + ' required vocabulary words used.';
+}
+
+function showDefinition(term) {
+  const box = document.getElementById('vocab-definition');
+  const entry = VOCAB_LIST.find(v => v.term === term);
+  if (!entry) return;
+  if (box.classList.contains('show') && box.dataset.term === term) {
+    box.classList.remove('show'); box.dataset.term = ''; return;
+  }
+  box.innerHTML = '<strong>' + entry.label + ':</strong> ' + entry.definition;
+  box.dataset.term = term;
+  box.classList.add('show');
+}
+
+function getUsedVocab() {
+  const text = [
+    document.getElementById('answer-dp1').value,
+    document.getElementById('answer-dp2').value,
+    document.getElementById('answer-dp3').value,
+    document.getElementById('closing-write').value
+  ].join(' ').toLowerCase();
+  return VOCAB_LIST.filter(v => text.includes(v.term)).map(v => v.term);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderVocabPreview();
+  renderVocabChecklist([]);
+  ['answer-dp1', 'answer-dp2', 'answer-dp3', 'closing-write'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => renderVocabChecklist(getUsedVocab()));
+  });
+});
+
+// ============================================================
+// HOVER/TAP GLOSSARY — incidental vocabulary (not on the target list)
+// ============================================================
+function closeAllGlossTooltips() {
+  document.querySelectorAll('.gloss-tooltip').forEach(t => t.remove());
+}
+document.addEventListener('click', closeAllGlossTooltips);
+document.addEventListener('scroll', closeAllGlossTooltips, true);
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.gloss-word').forEach(span => {
+    span.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const already = span.querySelector ? null : null;
+      closeAllGlossTooltips();
+      const tip = document.createElement('div');
+      tip.className = 'gloss-tooltip';
+      tip.textContent = span.getAttribute('data-def');
+      document.body.appendChild(tip);
+      const rect = span.getBoundingClientRect();
+      tip.style.left = (rect.left + window.scrollX) + 'px';
+      tip.style.top = (rect.bottom + window.scrollY + 6) + 'px';
+    });
+  });
+});
+
+// ============================================================
+// NON-AI FOCUS QUESTIONS (self-checking, no backend call)
+// ============================================================
+const FOCUS_QUESTIONS = {
+  'dp1a': {
+    prompt: "Riley's alert fired at $18, after she already bought the coffee. What does this tell you about how bank alerts work?",
+    options: ["Alerts warn you before a purchase happens", "Alerts tell you where your balance is AFTER something has already happened", "Alerts stop purchases automatically", "Alerts only work for direct deposits"],
+    correct: 1,
+    correctMsg: "Right — alerts are reactive, not predictive.",
+    incorrectMsg: "Not quite — look again at when the alert actually fired compared to when the purchase happened."
+  },
+  'dp1b': {
+    prompt: "If Riley had NOT opted into overdraft coverage and tried to spend more than her balance, what would happen?",
+    options: ["The purchase goes through and she's charged a fee", "The purchase is simply declined, no fee", "The bank cancels her account", "Her paycheck is delayed"],
+    correct: 1,
+    correctMsg: "Right — without overdraft coverage, the purchase just declines.",
+    incorrectMsg: "Not quite — think about what \"declining\" a purchase means versus letting it go through."
+  },
+  'dp2a': {
+    prompt: "What's the biggest red flag in Riley's exchange with the buyer?",
+    options: ["The buyer wants sneakers", "The buyer sent a screenshot instead of the money actually appearing in the app", "The buyer used Cash App at all", "Riley set a price for the shoes"],
+    correct: 1,
+    correctMsg: "Right — a screenshot is not proof of payment. Only the balance in the app is.",
+    incorrectMsg: "Not quite — think about what actually proves money was sent versus what just claims it."
+  },
+  'dp2b': {
+    prompt: "True or False: P2P payments like Zelle or Cash App can usually be undone if sent to the wrong person.",
+    options: ["True", "False"],
+    correct: 1,
+    correctMsg: "Right — P2P payments are very hard to reverse once sent.",
+    incorrectMsg: "Not quite — think back to how P2P payments compare to card purchases when it comes to reversing them."
+  },
+  'dp3a': {
+    prompt: "What should Riley do FIRST when she gets the text?",
+    options: ["Click the link immediately to check", "Call the number on the back of her card to ask the bank directly", "Reply to the text asking who it is", "Ignore it completely and never check"],
+    correct: 1,
+    correctMsg: "Right — verify using a number you already trust, never one from the message itself.",
+    incorrectMsg: "Not quite — think about which option lets Riley check without trusting the message itself."
+  },
+  'dp3b': {
+    prompt: "Which detail in the text is the biggest red flag?",
+    options: ["It mentions her bank's name", "It creates urgency with a 24-hour deadline and asks her to click a link", "It's a text message", "It arrived at night"],
+    correct: 1,
+    correctMsg: "Right — urgency plus a click-to-verify link is the classic scam pattern.",
+    incorrectMsg: "Not quite — think about which detail is designed to make Riley act without thinking."
+  }
+};
+
+let focusAnswers = {}; // id -> { selected, correct }
+
+function renderFocusQuestions() {
+  Object.keys(FOCUS_QUESTIONS).forEach(id => {
+    const q = FOCUS_QUESTIONS[id];
+    const container = document.getElementById('focus-' + id);
+    if (!container) return;
+    const optsHtml = q.options.map((opt, i) =>
+      '<div class="opt-row"><input type="radio" name="focus-' + id + '" id="focus-' + id + '-' + i + '" value="' + i + '">' +
+      '<label for="focus-' + id + '-' + i + '">' + opt + '</label></div>'
+    ).join('');
+    container.innerHTML =
+      '<div class="prompt">' + q.prompt + '</div>' +
+      optsHtml +
+      '<button onclick="checkFocus(\'' + id + '\')">Check</button>' +
+      '<div class="focus-result" id="result-' + id + '"></div>';
+  });
+}
+
+function checkFocus(id) {
+  const q = FOCUS_QUESTIONS[id];
+  const selected = document.querySelector('input[name="focus-' + id + '"]:checked');
+  if (!selected) { alert('Choose an answer first.'); return; }
+  const val = parseInt(selected.value, 10);
+  const correct = val === q.correct;
+  focusAnswers[id] = { selected: val, correct: correct };
+
+  const result = document.getElementById('result-' + id);
+  result.className = 'focus-result ' + (correct ? 'correct' : 'incorrect');
+  result.textContent = (correct ? '✓ ' : '') + (correct ? q.correctMsg : q.incorrectMsg);
+  scheduleAutoSave();
+}
+
+function countFocusAnswers() {
+  return Object.keys(FOCUS_QUESTIONS).filter(id => focusAnswers[id]).length;
+}
+
+document.addEventListener('DOMContentLoaded', renderFocusQuestions);
+
+// ============================================================
+// "Try first" enforcement + paste blocking
+// ============================================================
+function wireTryFirst(inputId, buttonId, minChars) {
+  const input = document.getElementById(inputId);
+  const btn = document.getElementById(buttonId);
+  if (!input || !btn) return;
+  const update = () => { btn.disabled = input.value.trim().length < minChars; };
+  update();
+  input.addEventListener('input', update);
+}
+document.addEventListener('DOMContentLoaded', () => {
+  wireTryFirst('answer-dp1', 'checkbtn-dp1', 30);
+  wireTryFirst('answer-dp2', 'checkbtn-dp2', 30);
+  wireTryFirst('answer-dp3', 'checkbtn-dp3', 30);
+});
+
+['answer-dp1', 'answer-dp2', 'answer-dp3', 'opening-write', 'closing-write'].forEach(id => {
+  document.addEventListener('DOMContentLoaded', () => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('paste', function (e) {
+      e.preventDefault();
+      const warnId = 'paste-warning-' + id.replace('answer-', '');
+      const warn = document.getElementById(warnId);
+      if (warn) { warn.style.display = 'block'; setTimeout(() => { warn.style.display = 'none'; }, 2500); }
+    });
+    el.addEventListener('contextmenu', e => e.preventDefault());
+  });
+});
+
+// ============================================================
+// BACKEND CALLS — retry-with-backoff.
+// ============================================================
+async function callBackend(action, extra, opts) {
+  const silent = opts && opts.silent;
+  const studentId = document.getElementById('student-id').value.trim();
+  if (!studentId) { if (!silent) alert('Enter your name first.'); return null; }
+  const body = Object.assign({ secret: SHARED_SECRET, action: action, studentId: studentId }, extra || {});
+
+  const maxAttempts = silent ? 5 : 3;
+  let lastErr = null;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(body)
+      });
+      const rawText = await res.text();
+      try { return JSON.parse(rawText); } catch (parseErr) { lastErr = parseErr; }
+    } catch (fetchErr) { lastErr = fetchErr; }
+    if (attempt < maxAttempts) {
+      const backoffMs = 700 * attempt + Math.random() * 300;
+      await new Promise(r => setTimeout(r, backoffMs));
+    }
+  }
+  if (!silent) alert('The server is busy — please try again in a moment.');
+  console.error('callBackend failed after retries:', lastErr);
+  return null;
+}
+
+let guidedAttempts = {};
+
+async function checkGuided(key, partLabel, passageElId, questionText) {
+  const answerEl = document.getElementById('answer-' + key);
+  const panel = document.getElementById('feedback-' + key);
+  const answer = answerEl.value.trim();
+  if (!answer) { alert('Write your answer first.'); return; }
+
+  const attemptsSoFar = guidedAttempts[key] || 0;
+  if (attemptsSoFar >= MAX_CHECK_ATTEMPTS) {
+    panel.style.display = 'block';
+    panel.innerHTML = "You've checked this a few times — no teacher is running today's class live, so go ahead and trust your answer and move on.";
+    return;
+  }
+  guidedAttempts[key] = attemptsSoFar + 1;
+  panel.style.display = 'block';
+  panel.innerHTML = '<span class="locked">Thinking...</span>';
+
+  const passageText = document.getElementById(passageElId).innerText.slice(0, 3000);
+
+  const data = await callBackend('guided_check', {
+    partLabel: partLabel, passageText: passageText, questionText: questionText,
+    studentAnswer: answer, attemptNumber: guidedAttempts[key]
+  });
+  if (!data) { panel.style.display = 'none'; return; }
+  panel.innerHTML = data.reply || data.error || 'No response.';
+}
+
+function getGuidedAnswers() {
+  const answers = {};
+  GUIDED_KEYS.forEach(k => {
+    const el = document.getElementById('answer-' + k);
+    if (el) answers[k] = el.value;
+  });
+  return answers;
+}
+function countGuidedAnswers() {
+  return GUIDED_KEYS.filter(k => {
+    const el = document.getElementById('answer-' + k);
+    return el && el.value.trim().length > 20;
+  }).length;
+}
+
+// ============================================================
+// SAVE / LOAD
+// ============================================================
+let saveTimer = null;
+function scheduleAutoSave() { clearTimeout(saveTimer); saveTimer = setTimeout(saveState, 4000); }
+
+['opening-write', 'closing-write', 'answer-dp1', 'answer-dp2', 'answer-dp3'].forEach(id => {
+  document.addEventListener('DOMContentLoaded', () => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', scheduleAutoSave);
+  });
+});
+
+async function saveState() {
+  const status = document.getElementById('opening-save-status');
+  const data = await callBackend('save_state', collectState(), { silent: true });
+  if (data && data.saved && status) status.textContent = 'Saved ' + new Date().toLocaleTimeString();
+}
+
+function collectState() {
+  return {
+    openingWrite: document.getElementById('opening-write').value,
+    closingWrite: document.getElementById('closing-write').value,
+    guidedAnswers: getGuidedAnswers(),
+    guidedAnswersCount: countGuidedAnswers(),
+    guidedAnswersTotal: GUIDED_KEYS.length,
+    focusAnswers: focusAnswers,
+    focusAnswersCount: countFocusAnswers(),
+    focusAnswersTotal: Object.keys(FOCUS_QUESTIONS).length,
+    vocabUsed: getUsedVocab(),
+    vocabList: VOCAB_LIST.map(v => v.term),
+    gatesPassed: gatesPassed
+  };
+}
+
+async function loadState() {
+  const status = document.getElementById('load-status');
+  status.textContent = 'Loading...';
+  const data = await callBackend('load_state', {});
+  if (!data || !data.found) { status.textContent = 'No saved work found yet — start typing below.'; return; }
+
+  document.getElementById('opening-write').value = data.openingWrite || '';
+  document.getElementById('closing-write').value = data.closingWrite || '';
+
+  const ga = data.guidedAnswers || {};
+  GUIDED_KEYS.forEach(k => { const el = document.getElementById('answer-' + k); if (el && ga[k]) el.value = ga[k]; });
+
+  const fa = data.focusAnswers || {};
+  Object.keys(fa).forEach(id => {
+    focusAnswers[id] = fa[id];
+    const radio = document.querySelector('input[name="focus-' + id + '"][value="' + fa[id].selected + '"]');
+    if (radio) radio.checked = true;
+    const q = FOCUS_QUESTIONS[id];
+    const result = document.getElementById('result-' + id);
+    if (q && result) {
+      result.className = 'focus-result ' + (fa[id].correct ? 'correct' : 'incorrect');
+      result.textContent = (fa[id].correct ? '✓ ' : '') + (fa[id].correct ? q.correctMsg : q.incorrectMsg);
+    }
+  });
+
+  const gp = data.gatesPassed || {};
+  SLIDE_GATES.forEach(gate => {
+    if (gp[gate.id]) {
+      gateMaxReached[gate.id] = gate.end;
+      unlockGate(gate.id);
+      renderGate(gate);
+    }
+  });
+
+  renderVocabChecklist(getUsedVocab());
+  status.textContent = 'Work loaded.';
+}
+
+async function submitWork() {
+  const state = collectState();
+  const submitBtn = document.querySelector('button.primary');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Getting feedback...';
+
+  const data = await callBackend('reflect_check', state);
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Submit for feedback';
+
+  const area = document.getElementById('completion-area');
+  if (!data) { area.innerHTML = ''; return; }
+  if (data.error) { area.innerHTML = '<div class="completion-box incomplete">' + data.error + '</div>'; return; }
+
+  const cls = data.complete ? 'pass' : 'incomplete';
+  const heading = data.complete ? 'Complete — nice work today.' : 'Not quite complete yet';
+  let checklistHtml = '';
+  if (!data.complete && data.checklist) {
+    checklistHtml = '<ul>';
+    if (!data.checklist.hasOpeningWrite) checklistHtml += '<li>Add your opening prediction.</li>';
+    if (!data.checklist.hasClosingWrite) checklistHtml += '<li>Add your closing write.</li>';
+    if (!data.checklist.vocabMet) checklistHtml += '<li>Use at least ' + data.checklist.vocabRequired + ' vocabulary words (currently ' + data.checklist.vocabCount + ').</li>';
+    if (!data.checklist.hasGuidedAnswers) checklistHtml += '<li>Answer at least 2 of the 3 Decision Point reasoning questions.</li>';
+    if (!data.checklist.hasFocusAnswers) checklistHtml += '<li>Answer all 6 quick-check questions (2 per Decision Point).</li>';
+    if (!data.checklist.allGatesPassed) checklistHtml += '<li>Click through all the slides in each Decision Point.</li>';
+    checklistHtml += '</ul>';
+  }
+
+  let mockHtml = '';
+  if (data.mockRubric) {
+    const c1 = data.mockRubric.criterion1, c2 = data.mockRubric.criterion2;
+    mockHtml = '<div class="mock-banner"><strong>Practice score preview</strong> — this shows how your reasoning would likely score, not your official grade for today (today\'s grade is completion).</div>' +
+      '<div class="mock-cards">' +
+        '<div class="mock-card"><h4>Application of Digital Banking Concepts</h4><div class="range">' + (c1 ? c1.range : 'N/A') + '</div><div>' + (c1 ? c1.feedback : '') + '</div>' +
+          '<div class="improve"><strong>Next step:</strong> ' + (c1 ? c1.improve : '') + '</div></div>' +
+        '<div class="mock-card"><h4>Reasoning &amp; Vocabulary Use</h4><div class="range">' + (c2 ? c2.range : 'N/A') + '</div><div>' + (c2 ? c2.feedback : '') + '</div>' +
+          '<div class="improve"><strong>Next step:</strong> ' + (c2 ? c2.improve : '') + '</div></div>' +
+      '</div>';
+  } else if (data.feedbackGenerated === false) {
+    mockHtml = '<div class="mock-banner">Practice preview unavailable right now — your completion status above is still recorded.</div>';
+  }
+
+  area.innerHTML = '<div class="completion-box ' + cls + '"><strong>' + heading + '</strong>' + checklistHtml + '</div>' + mockHtml;
+}
+
+function downloadWork() {
+  const val = id => { const el = document.getElementById(id); return el ? el.value : ''; };
+  const esc = s => (s || '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const studentId = document.getElementById('student-id').value.trim() || '(no name entered)';
+  const now = new Date().toLocaleString();
+
+  const html = `
+    <h1>Riley's Banking Day — ${esc(studentId)}</h1>
+    <div class="p-label">Printed: ${now}</div>
+
+    <h2>Opening Prediction</h2>
+    <div class="p-block">${esc(val('opening-write')) || '(not yet written)'}</div>
+
+    <h2>Decision Point 1 — Convenience Tools</h2>
+    <div class="p-block">${esc(val('answer-dp1')) || '(not yet answered)'}</div>
+
+    <h2>Decision Point 2 — P2P &amp; Digital Wallets</h2>
+    <div class="p-block">${esc(val('answer-dp2')) || '(not yet answered)'}</div>
+
+    <h2>Decision Point 3 — Fraud &amp; Security</h2>
+    <div class="p-block">${esc(val('answer-dp3')) || '(not yet answered)'}</div>
+
+    <h2>Vocabulary Used</h2>
+    <div class="p-label">${(getUsedVocab().map(t => VOCAB_LIST.find(v => v.term === t).label).join(', ')) || 'none yet'}</div>
+
+    <h2>After Riley's Day</h2>
+    <div class="p-block">${esc(val('closing-write')) || '(not yet written)'}</div>
+
+    <h2>Feedback received</h2>
+    <div class="p-block">${document.getElementById('completion-area').innerHTML || '(not yet submitted for feedback)'}</div>
+  `;
+
+  document.getElementById('print-summary').innerHTML = html;
+  document.body.classList.add('printing');
+  window.print();
+}
+
+window.addEventListener('afterprint', () => {
+  document.body.classList.remove('printing');
+});
+</script>
+
+</body>
+</html>
